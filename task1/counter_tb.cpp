@@ -11,7 +11,7 @@ int main(int argc, char **argv, char **env) {
     Vcounter* top = new Vcounter;
     // init trace dump
     Verilated::traceEverOn(true);
-    VerilatedVcdC* tfp = new Verilated VcdC;
+    VerilatedVcdC* tfp = new VerilatedVcdC;
     top->trace (tfp, 99);
     tfp->open ("counter.vcd");
 
@@ -30,7 +30,7 @@ int main(int argc, char **argv, char **env) {
             top->eval ();
         }
         top->rst = (i<2) | (i == 15);
-        top->en (i>4);
+        top->en = (i>4);
         if (Verilated::gotFinish()) exit(0);
     } 
     tfp->close();
