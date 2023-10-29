@@ -20,6 +20,8 @@ int main(int argc, char **argv, char **env) {
     top->rst = 1;
     top->en = 0;
 
+    int pause9_count = 0;
+
     //run simulations for many clock cycles
     for(i=0; i<300; i++){
 
@@ -29,8 +31,25 @@ int main(int argc, char **argv, char **env) {
             top->clk = !top->clk;
             top->eval ();
         }
-        top->rst = (i<2) | (i == 15);
+        top->rst = (i<2) | (i == 19);
         top->en = (i>4);
+        bool pause9 = false;
+        if(top->count == 9){
+            if(pause9_count == 0){
+            pause9 = true;
+            top->en = 0;
+            pause9_count++;
+            }
+            else if(pause9_count < 2){
+                top->en = 0;
+                pause9_count++;
+            }
+            else{
+                pause9_count = 0;
+                pause9 = false;
+                top->en = 1;
+            }
+        }
         if (Verilated::gotFinish()) exit(0);
     } 
     tfp->close();
