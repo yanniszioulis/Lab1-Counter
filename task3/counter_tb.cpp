@@ -22,11 +22,8 @@ int main(int argc, char **argv, char **env) {
 
     //initialize simulation inputs
     top->clk = 1;
-    top->rst = 1;
-    top->en = 0;
-    top->dir = 1;
-
-    int pause9_count = 0;
+    top->rst = 0;
+    vbdSetMode(1);
 
     //run simulations for many clock cycles
     for(i=0; i<300; i++){
@@ -47,27 +44,11 @@ int main(int argc, char **argv, char **env) {
         vbdCycle(i+1);
         // ---- end of Vbuddy output section
 
-        top->dir = vbdFlag();
+        // top->v = vbdValue(); 
+        top->ld = vbdFlag();
 
-        top->rst = (i<2) | (i == 19);
-        top->en = (i>4);
-        bool pause9 = false;
-        if(top->count == 9){
-            if(pause9_count == 0){
-            pause9 = true;
-            top->en = 0;
-            pause9_count++;
-            }
-            else if(pause9_count < 2){
-                top->en = 0;
-                pause9_count++;
-            }
-            else{
-                pause9_count = 0;
-                pause9 = false;
-                top->en = 1;
-            }
-        }
+        // top->rst = (i<2) | (i == 19);
+        // top->en = (i>4);
         if (Verilated::gotFinish()) exit(0);
     }
     vbdClose(); // ++++
